@@ -3,9 +3,10 @@
     $.fn.frames = function( options ) {
 
 	var settings = $.extend({
-	    numberOfFrames = 5;
+	    frameCount: 5,
+	    interval: 1000
 	}, options);
-	var interval;
+	var intervals = [];
 
 	return this.each(function() {
 
@@ -15,53 +16,54 @@
 	    that.original = $that.attr("src");
 
 	    that.uri = that.original.split("/");
+	    that.path = "/" + that.uri[1] + "/" + that.uri[2] + "/" + that.uri[3] + "/";
 	    that.id = that.uri[2];
 	    that.token = that.uri[3];
+	    that.dimensions = $that.width() + "x" + $that.height();
+	    that.length = parseInt($that.attr("data-length")) || 60;
 	    that.time = 0;
-	    that.width = $(that).width();
-	    that.height = $(that).height();
-	    that.dimensions = that.width + "x" + that.height;
-	    that.length = 0;
 	    that.shown = 0;
 
-	    var cycle = function(video_length) {
-		interval = setInterval(function() {
-		    if (that.shown < 5) {
-			that.shown++;
+	    var getThumbnailPath = function(time) {
+		return that.path + that.dimensions + ":" + time + "/thumbnail.jpg";
+	    };
+
+	    var cycle = function() {
+		for (var i = 1; i <= settings.frameCount; i += 1) {
+		    that.time = (that.length / settings.frameCount >> 0) * i;
+		    (new Image()).src = getThumbnailPath(that.time);
+		}
+		intervals.push(setInterval(function() {
+		    if (that.shown < settings.frameCount) {
+			that.shown += 1;
 		    } else {
 			that.shown = 1;
 		    }
-		    that.time = (video_length / 6 >> 0) * that.shown;
-		    $(that).attr("src", "/api/photo/frame?photo_id=" + that.id + "&time=" + that.time + "&token=" + that.token);
-		}, 1000);
+		    that.time = (that.length / settings.frameCount >> 0) * that.shown;
+		    $that.attr("src", getThumbnailPath(that.time));
+		}, settings.interval));
 	    };
 
-	    $that.hover(
-		function() {
-		    if (interval != undefined) {
-			clearInterval(interval);
-		    }
-		    $(that).width("auto");
-		    if (that.length == 0) {
-			$.ajax({
-			    url: "/api/photo/list?format=json&photo_id=" + that.id,
-			    success: function(response) {
-				eval( response );
-				that.length = parseInt(visual.photo.video_length);
-				cycle(that.length);
-			    }
-			});
-		    } else {
-			cycle(that.length);
-		    }
-		},
-		function() {
-		    $(that).attr("src", that.original);
-		    if (interval != undefined) {
-			clearInterval(interval);
-		    }
+	    var clearIntervals = function() {
+		for (var i = 0; i < intervals.length; i += 1) {
+		    clearInterval(intervals[i]);
 		}
-	    );
+	    };
+
+	    var reset = function() {
+		$that.attr("src", that.original);
+	    };
+
+	    $that.mouseenter(function() {
+		clearIntervals();
+		cycle();
+	    });
+
+	    $that.mouseleave(function() {
+		clearIntervals();
+		reset();
+	    });
+
 	});
 
     };
