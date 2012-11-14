@@ -1,5 +1,5 @@
 /**
- * frames.js v0.1
+ * frames.js for 23 Video v0.1
  * A jQuery plugin for creating dynamic thumbnails on 23 Video websites
  *
  * Kalle Kabell, kalle@23company.com
@@ -40,6 +40,7 @@
 
 	    that.dimensions = $that.width() + "x" + $that.height();
 
+	    // Get video length from the the data-length attribute; if not found, assume min-length of 60 secs
 	    that.length = parseInt($that.attr("data-length")) || 60;
 
 	    that.time = 0;
@@ -54,7 +55,7 @@
 	    // Starts the image cycle
 	    var cycle = function() {
 
-		// Request all images at once and save them in an array when loaded
+		// Request all frames at once and save them in an array when loaded
 		var loadedFrames = [];
 		for (var i = 1; i <= settings.frameCount; i += 1) {
 		    that.time = (that.length / settings.frameCount * i) >> 0;
@@ -65,7 +66,7 @@
 		    });
 		}
 
-		// Creates an interval that cycles through all loaded images
+		// Creates an interval that cycles through all loaded frames
 		// Saves a reference to the interval in an array for clearing later
 		intervals.push(setInterval(function() {
 
