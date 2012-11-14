@@ -14,7 +14,7 @@ In the `<head>` section of your video website, import jQuery and frames.js, eith
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript" src="/files/frames.js"></script>
 
-If you are using other JavaScript libraries or frameworks that utilizes $ as a function or variable name (like Prototype that currently is default on a 23 Video site), be sure to relinquish jQuery's control of this variable by calling `jQuery.noConflict()` after importing jQuery:
+If you are using other JavaScript libraries or frameworks that utilize `$` as a function or variable name (like Prototype that currently is imported by default on 23 Video websites), be sure to relinquish jQuery's control of this variable by calling `jQuery.noConflict()` after importing jQuery:
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
     <script type="text/javascript">
@@ -44,12 +44,12 @@ frames.js comes with a set of options that allows you to customize the plugin. C
 
 * `frameCount`: The number of keyframes the plugin should load and cycle through. *Default: 6*.
 * `interval`: The time in milliseconds that each frame should be shown before moving on to the next. *Default: 1500*.
-* `hoverElement`: Defines a selector for an element that is placed on top of the actual thumbnail and hence should fire the mouseenter / mouseleave events. *Default: undefined*
+* `hoverElement`: Defines a selector for an element that is placed on top of the actual thumbnail and hence should fire the mouseenter / mouseleave events. **NOTE: the specified element must have the same direct parent element as the thumbnail's `img` element**. *Default: undefined*.
 
 The options are passed to the `frames()` function as an object. So if I wanted to have frames.js cycle through 8 keyframes, each shown in 1 second and triggered by hovering over an element with the class "playicon", I would activate frames.js using the following:
 
     jQuery(".view-item").frames({
-	frameCount: 8,
-	interval: 1000,
-	hoverElement: ".playicon"
+        frameCount: 8,
+        interval: 1000,
+        hoverElement: ".playicon"
     });

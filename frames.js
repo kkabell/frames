@@ -13,10 +13,13 @@
 	// Default settings
 	var settings = $.extend({
 	    frameCount: 6,
-	    interval: 1500
+	    interval: 1500,
+	    hoverElement: undefined,
+	    type: "cycle"
 	}, options);
 
 	var intervals = [];
+	var loadedFrames = [];
 
 	return this.each(function() {
 
@@ -52,26 +55,29 @@
 		return that.path + that.dimensions + ":" + time + "/thumbnail.jpg";
 	    };
 
-	    // Starts the image cycle
-	    var cycle = function() {
-
+	    var loadFrames = function() {
 		// Request all frames at once and save them in an array when loaded
-		var loadedFrames = [];
+		loadedFrames = [];
 		for (var i = 1; i <= settings.frameCount; i += 1) {
 		    that.time = (that.length / settings.frameCount * i) >> 0;
 		    var img = $("<img />");
 		    img.attr("data-ident", i);
 		    img.attr("src", getThumbnailPath(that.time)).load(function(){
 			loadedFrames.push($(this).attr("data-ident"));
+			// Sort loaded images numerically
+			loadedFrames.sort(function(a,b){return a-b});
 		    });
 		}
+	    };
+
+	    // Starts the image cycle
+	    var cycle = function() {
+
+		loadFrames();
 
 		// Creates an interval that cycles through all loaded frames
 		// Saves a reference to the interval in an array for clearing later
 		intervals.push(setInterval(function() {
-
-		    // Sort loaded images numerically
-		    loadedFrames.sort(function(a,b){return a-b});
 
 		    // Update that.shown to current index of the frame shown
 		    that.shown = loadedFrames.indexOf(that.shownIdent);
@@ -88,9 +94,28 @@
 		    that.time = (that.length / settings.frameCount * loadedFrames[that.shown]) >> 0;
 
 		    // Change src of the img
+		    // TODO: Support transition effects
 		    $that.attr("src", getThumbnailPath(that.time));
 
 		}, settings.interval));
+	    };
+
+	    var skim = function() {
+
+		loadFrames();
+
+		var index = -1;
+		var x = 0;
+
+		$(that.hoverElement).mousemove(function(e){
+		    x = e.pageX - $that.offset().left;
+		    index = (x / $that.width() * loadedFrames.length) >> 0;
+		    if (that.shown !== index) {
+			that.shown = index;
+			that.time = (that.length / settings.frameCount * loadedFrames[that.shown]) >> 0;
+			$that.attr("src", getThumbnailPath(that.time));
+		    }
+		});
 	    };
 
 	    // Clears intervals currently running
@@ -98,10 +123,14 @@
 		for (var i = 0; i < intervals.length; i += 1) {
 		    clearInterval(intervals[i]);
 		}
+		// Remove all cleared intervals, since they are not used anymore
+		intervals = [];
 	    };
 
 	    // Reset image to original source and counting variables to original values
 	    var reset = function() {
+		clearIntervals();
+		$(that.hoverElement).unbind("mousemove");
 		$that.attr("src", that.original);
 		that.shown = -1;
 		that.shownIdent = -1;
@@ -109,13 +138,15 @@
 
 	    // Activates the cycle when mouse enters the specified hover element
 	    $(that.hoverElement).mouseenter(function() {
-		clearIntervals();
-		cycle();
+		if (settings.type === "cycle") {
+		    cycle();
+		} else if (settings.type === "skim") {
+		    skim();
+		}
 	    });
 
 	    // Clears all intervals and resets counting variables when mouse leaves the hover element
 	    $(that.hoverElement).mouseleave(function() {
-		clearIntervals();
 		reset();
 	    });
 
