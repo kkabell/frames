@@ -1,5 +1,5 @@
 # frames.js for 23 Video
-A jQuery plugin for creating dynamic thumbnails on a 23 Video website
+A jQuery plugin for creating dynamic thumbnails on a 23 Video website.
 
 ## What is frames.js?
 frames.js is a simple jQuery plugin that makes the thumbnails on your 23 Video website cycle through a number of keyframes from the corresponding video when hovered over (much like thumbnails on Dailymotion do). Use it as a handy preview feature, or just as a cool design element.
@@ -11,26 +11,26 @@ As frames.js is still in the early stages of development, I recommend downloadin
 
 In the `<head>` section of your video website, import jQuery and frames.js, either by adding a HTML-block in the layout grid, or by modifying the master template.
 
-   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-   <script type="text/javascript" src="/files/frames.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/files/frames.js"></script>
 
 If you are using other JavaScript libraries or frameworks that utilizes $ as a function or variable name (like Prototype that currently is default on a 23 Video site), be sure to relinquish jQuery's control of this variable by calling `jQuery.noConflict()` after importing jQuery:
 
-   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-   <script type="text/javascript">
-   	   jQuery.noConflict();
-   </script>
-   <script type="text/javascript" src="/files/frames.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        jQuery.noConflict();
+    </script>
+    <script type="text/javascript" src="/files/frames.js"></script>
 
 ### Prepare `data-length` attribute
 frames.js needs to know the length of each video to be able to request frames correctly. This is done by adding a `data-length` attribute to `<img>` tags that show the thumbnails. Simply edit the template for a thumbnails layout block or a video page and locate the `<img>` tag.
 So if the `<img>` currently looks something like:
 
-   <img src="{{photo.thumbnail_url}}" width="{{photo.thumbnail_width}}" height="{{photo.thumbnail_height}}" />
+    <img src="{{photo.thumbnail_url}}" width="{{photo.thumbnail_width}}" height="{{photo.thumbnail_height}}" />
 
 Then add the `data-length` attribute and parse the liquid variable `photo.video_length` as the value:
 
-   <img src="{{photo.thumbnail_url}}" width="{{photo.thumbnail_width}}" height="{{photo.thumbnail_height}}" data-length="{{photo.video_length}}" />
+    <img src="{{photo.thumbnail_url}}" width="{{photo.thumbnail_width}}" height="{{photo.thumbnail_height}}" data-length="{{photo.video_length}}" />
 
 ### Activate frames.js
 You active frames.js by calling the `frames()` function on a jQuery collection of thumbnail images:
