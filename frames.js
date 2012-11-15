@@ -57,16 +57,17 @@
 
 	    var loadFrames = function() {
 		// Request all frames at once and save them in an array when loaded
-		loadedFrames = [];
-		for (var i = 1; i <= settings.frameCount; i += 1) {
-		    that.time = (that.length / settings.frameCount * i) >> 0;
-		    var img = $("<img />");
-		    img.attr("data-ident", i);
-		    img.attr("src", getThumbnailPath(that.time)).load(function(){
-			loadedFrames.push($(this).attr("data-ident"));
-			// Sort loaded images numerically
-			loadedFrames.sort(function(a,b){return a-b});
-		    });
+		if (loadedFrames.length === 0) {
+		    for (var i = 1; i <= settings.frameCount; i += 1) {
+			that.time = (that.length / settings.frameCount * i) >> 0;
+			var img = $("<img />");
+			img.attr("data-ident", i);
+			img.attr("src", getThumbnailPath(that.time)).load(function(){
+			    loadedFrames.push($(this).attr("data-ident"));
+			    // Sort loaded images numerically
+			    loadedFrames.sort(function(a,b){return a-b});
+			});
+		    }
 		}
 	    };
 

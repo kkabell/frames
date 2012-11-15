@@ -40,7 +40,7 @@ You active frames.js by calling the `frames()` function on a jQuery collection o
 Be sure to include a parent to the image in the css-selector (in this case `.view-item`) to avoid the script attempting to manipulate non-thumbnail images like logos and other graphical elements.
 
 ### Options
-frames.js comes with a set of options that allows you to customize the plugin. Currently, you can use the following options:
+frames.js comes with a set of options that allows you to customize the behaviour of the plugin. Currently, you can use the following options:
 
 * `frameCount`: The number of keyframes the plugin should load and cycle through. *Default: 6*.
 * `interval`: The time in milliseconds that each frame should be shown before moving on to the next. *Default: 1500*.
