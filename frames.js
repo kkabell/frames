@@ -15,7 +15,10 @@
 	    frameCount: 6,
 	    interval: 1500,
 	    hoverElement: undefined,
-	    type: "cycle"
+	    mode: "cycle",
+	    showProgress: true,
+	    progressColor: "#49A34D",
+	    progressVerticalAlign: "top"
 	}, options);
 
 	var intervals = [];
@@ -105,6 +108,24 @@
 
 		loadFrames();
 
+		if (settings.showProgress) {
+		    $that.parent().css({position: "relative"});
+		    $that.after('<div class="progress"></div>');
+		    var progressBar = $that.parent().children(".progress");
+		    progressBar.css({
+			position: "absolute",
+			left: 0,
+			height: "5%",
+			width: "0%",
+			backgroundColor: settings.progressColor
+		    });
+		    if (settings.progressVerticalAlign === "bottom") {
+			progressBar.css({top: ($that.height() - progressBar.height())});
+		    } else {
+			progressBar.css({top: 0});
+		    }
+		}
+
 		var index = -1;
 		var x = 0;
 
@@ -115,6 +136,10 @@
 			that.shown = index;
 			that.time = (that.length / settings.frameCount * loadedFrames[that.shown]) >> 0;
 			$that.attr("src", getThumbnailPath(that.time));
+			if (settings.showProgress) {
+			    var progressWidth = ((that.shown + 1) / loadedFrames.length * 100) + "%";
+			    progressBar.css({width: progressWidth});
+			}
 		    }
 		});
 	    };
@@ -135,13 +160,16 @@
 		$that.attr("src", that.original);
 		that.shown = -1;
 		that.shownIdent = -1;
+		if (settings.showProgress) {
+		    $that.parent().children(".progress").remove();
+		}
 	    };
 
 	    // Activates the cycle when mouse enters the specified hover element
 	    $(that.hoverElement).mouseenter(function() {
-		if (settings.type === "cycle") {
+		if (settings.mode === "cycle") {
 		    cycle();
-		} else if (settings.type === "skim") {
+		} else if (settings.mode === "skim") {
 		    skim();
 		}
 	    });
