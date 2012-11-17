@@ -1,5 +1,5 @@
 /**
- * frames.js for 23 Video v0.1
+ * frames.js for 23 Video v0.2
  * A jQuery plugin for creating dynamic thumbnails on 23 Video websites
  *
  * Kalle Kabell, kalle@23company.com
@@ -15,20 +15,22 @@
 	    frameCount: 6,
 	    interval: 1500,
 	    hoverElement: undefined,
-	    mode: "cycle",
+	    mode: "skim",
 	    showProgress: true,
 	    progressColor: "#49A34D",
 	    progressVerticalAlign: "top"
 	}, options);
 
 	var intervals = [];
-	var loadedFrames = [];
 
 	return this.each(function() {
 
 	    // Save references to the image; as DOM element and as jQuery object
 	    var that = this;
 	    var $that = $(that);
+
+	    var loadedFrames = [];
+	    var loadedImg = [];
 
 	    // Which element should activate the cycle when hovered over?
 	    that.hoverElement = $that.parent().children(settings.hoverElement)[0] || that;
@@ -59,17 +61,29 @@
 	    };
 
 	    var loadFrames = function() {
+
 		// Request all frames at once and save them in an array when loaded
 		if (loadedFrames.length === 0) {
 		    for (var i = 1; i <= settings.frameCount; i += 1) {
 			that.time = (that.length / settings.frameCount * i) >> 0;
 			var img = $("<img />");
 			img.attr("data-ident", i);
-			img.attr("src", getThumbnailPath(that.time)).load(function(){
+			img.attr("src", getThumbnailPath(that.time)).one("load", function(){
+
+			    // Save numerical identifier
 			    loadedFrames.push($(this).attr("data-ident"));
+
+			    // Save reference to object, so http-request doesn't get aborted
+			    loadedImg.push(img);
+
 			    // Sort loaded images numerically
 			    loadedFrames.sort(function(a,b){return a-b});
 			});
+
+			// For images loading from cache, trigger manually
+			if (img.complete || (jQuery.browser.msie && parseInt(jQuery.browser.version) == 6)) {
+			    img.trigger("load");
+			}
 		    }
 		}
 	    };
@@ -104,10 +118,12 @@
 		}, settings.interval));
 	    };
 
+	    // Starts skim mode
 	    var skim = function() {
 
 		loadFrames();
 
+		// Optionally init and place progress bar
 		if (settings.showProgress) {
 		    $that.parent().css({position: "relative"});
 		    $that.after('<div class="progress"></div>');
@@ -128,16 +144,25 @@
 
 		var index = -1;
 		var x = 0;
+		var framesLength = 0;
 
 		$(that.hoverElement).mousemove(function(e){
+		    framesLength = loadedFrames.length;
+
+		    // If framesLength's empty - no images loaded yet - use frameCount to show progress "correctly"
+		    if (framesLength === 0) {framesLength = settings.frameCount;}
+
+		    // Get mouse x-value relative to img and translate to corresponding frame
 		    x = e.pageX - $that.offset().left;
-		    index = (x / $that.width() * loadedFrames.length) >> 0;
+		    index = (x / $that.width() * framesLength) >> 0;
+
+		    // Update image and progress bar
 		    if (that.shown !== index) {
 			that.shown = index;
-			that.time = (that.length / settings.frameCount * loadedFrames[that.shown]) >> 0;
+			that.time = (that.length / settings.frameCount * (loadedFrames[that.shown] || index + 1)) >> 0;
 			$that.attr("src", getThumbnailPath(that.time));
 			if (settings.showProgress) {
-			    var progressWidth = ((that.shown + 1) / loadedFrames.length * 100) + "%";
+			    var progressWidth = ((that.shown + 1) / framesLength * 100) + "%";
 			    progressBar.css({width: progressWidth});
 			}
 		    }
