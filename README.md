@@ -2,7 +2,7 @@
 A jQuery plugin for creating dynamic thumbnails on a 23 Video website.
 
 ## What is frames.js?
-frames.js is a simple jQuery plugin that makes the thumbnails on your 23 Video website cycle through a number of keyframes from the corresponding video when hovered over (much like thumbnails on Dailymotion do). Use it as a handy preview feature, or just as a cool design element.
+frames.js is a simple jQuery plugin that makes the thumbnails on your 23 Video website cycle through a number of keyframes from the corresponding video when hovered over. Either as a timed cycle (much like thumbnails on Dailymotion) or corresponding to mouse movement from left to right over the image (like photo albums in Apple iPhoto). Use it as a handy preview feature, or just as a cool design element.
 
 ## Usage
 
@@ -42,13 +42,23 @@ Be sure to include a parent to the image in the css-selector (in this case `.vie
 ### Options
 frames.js comes with a set of options that allows you to customize the behaviour of the plugin. Currently, you can use the following options:
 
+* `mode`: The method used to change frames. Options are `"skim"` and `"cycle"`. *Default: "skim"*.
 * `frameCount`: The number of keyframes the plugin should load and cycle through. *Default: 6*.
-* `interval`: The time in milliseconds that each frame should be shown before moving on to the next. *Default: 1500*.
-* `hoverElement`: Defines a selector for an element that is placed on top of the actual thumbnail and hence should fire the mouseenter / mouseleave events. **NOTE: the specified element must have the same direct parent element as the thumbnail's `img` element**. *Default: undefined*.
+* `hoverElement`: CSS selector for an element that is placed on top of the actual thumbnail and hence should fire the mouseenter / mouseleave events. **NOTE: the specified element must have the same direct parent element as the thumbnail's `img` element**. *Default: undefined*.
 
-The options are passed to the `frames()` function as an object. So if I wanted to have frames.js cycle through 8 keyframes, each shown in 1 second and triggered by hovering over an element with the class "playicon", I would activate frames.js using the following:
+#### Cycle mode specific
+* `interval`: The time in milliseconds that each frame should be shown before moving on to the next in `cycle`mode. *Default: 1500*.
+
+#### Skim mode specific
+* `showProgress`: Value indication if a progress bar should be shown on top of the thumbnail *Default: true*.
+* `progressVerticalAlign`: Place of the progress bar. Options are `"top"`and `"bottom"`. *Default: "top"*.
+* `progressColor`: Color of the progress bar. *Default: "#49A34D"*.
+
+
+The options are passed to the `frames()` function as an object. So if I wanted to have frames.js cycle through 8 keyframes, each shown in 1 second and triggered by hovering over an element with the class "playicon", I would activate frames.js using the following settings:
 
     jQuery(".view-item").frames({
+	mode: "cycle",
         frameCount: 8,
         interval: 1000,
         hoverElement: ".playicon"
