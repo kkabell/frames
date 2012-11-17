@@ -55,10 +55,10 @@ frames.js comes with a set of options that allows you to customize the behaviour
 * `progressColor`: Color of the progress bar. *Default: "#49A34D"*.
 
 
-The options are passed to the `frames()` function as an object. So if I wanted to have frames.js cycle through 8 keyframes, each shown in 1 second and triggered by hovering over an element with the class "playicon", I would activate frames.js using the following settings:
+The options are passed to the `frames()` function as an object. So if I wanted to have frames.js cycle through 8 keyframes, each shown in 1 second and triggered by hovering over an element with the class "playicon", I could activate frames.js using the following settings:
 
-    jQuery(".view-item").frames({
-	mode: "cycle",
+    jQuery(".view-photo img").frames({
+        mode: "cycle",
         frameCount: 8,
         interval: 1000,
         hoverElement: ".playicon"
