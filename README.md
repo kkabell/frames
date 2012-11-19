@@ -1,5 +1,5 @@
 # frames.js for 23 Video
-A jQuery plugin for creating dynamic thumbnails on a 23 Video website.
+A jQuery plugin for creating dynamic thumbnails on a <a href="http://23video.com">23 Video</a> website.
 
 ## What is frames.js?
 frames.js is a simple jQuery plugin that makes the thumbnails on your 23 Video website cycle through a number of keyframes from the corresponding video when hovered over. Either as a timed cycle (much like thumbnails on Dailymotion) or corresponding to mouse movement from left to right over the image (like photo albums in Apple iPhoto). Use it as a handy preview feature, or just as a cool design element.
@@ -33,7 +33,7 @@ Then add the `data-length` attribute and parse the liquid variable `photo.video_
     <img src="{{photo.thumbnail_url}}" width="{{photo.thumbnail_width}}" height="{{photo.thumbnail_height}}" data-length="{{photo.video_length}}" />
 
 ### Activate frames.js
-You active frames.js by calling the `frames()` function on a jQuery collection of thumbnail images:
+You activate frames.js by calling the `frames()` function on a jQuery collection of thumbnail images:
 
     jQuery(".view-item img").frames();
 
@@ -50,8 +50,9 @@ frames.js comes with a set of options that allows you to customize the behaviour
 * `interval`: The time in milliseconds that each frame should be shown before moving on to the next in `cycle`mode. *Default: 1500*.
 
 #### Skim mode specific
-* `showProgress`: Value indication if a progress bar should be shown on top of the thumbnail *Default: true*.
-* `progressVerticalAlign`: Place of the progress bar. Options are `"top"`and `"bottom"`. *Default: "top"*.
+* `showProgress`: Boolean value indicating if a progress bar should be shown on top of the thumbnail *Default: true*.
+* `progressHeight`: Height of the progress bar in pixels or percent. *Default: "5%"*
+* `progressAlign`: Place of the progress bar. Options are `"top"`and `"bottom"`. *Default: "top"*.
 * `progressColor`: Color of the progress bar. *Default: "#49A34D"*.
 
 

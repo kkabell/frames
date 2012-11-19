@@ -18,7 +18,8 @@
 	    mode: "skim",
 	    showProgress: true,
 	    progressColor: "#49A34D",
-	    progressVerticalAlign: "top"
+	    progressAlign: "top",
+	    progressHeight: "5%"
 	}, options);
 
 	var intervals = [];
@@ -131,11 +132,11 @@
 		    progressBar.css({
 			position: "absolute",
 			left: 0,
-			height: "5%",
+			height: settings.progressHeight,
 			width: "0%",
 			backgroundColor: settings.progressColor
 		    });
-		    if (settings.progressVerticalAlign === "bottom") {
+		    if (settings.progressAlign === "bottom") {
 			progressBar.css({top: ($that.height() - progressBar.height())});
 		    } else {
 			progressBar.css({top: 0});
@@ -149,7 +150,7 @@
 		$(that.hoverElement).mousemove(function(e){
 		    framesLength = loadedFrames.length;
 
-		    // If framesLength's empty - no images loaded yet - use frameCount to show progress "correctly"
+		    // If framesLength's zero - no images loaded yet - use frameCount to show progress "correctly"
 		    if (framesLength === 0) {framesLength = settings.frameCount;}
 
 		    // Get mouse x-value relative to img and translate to corresponding frame
