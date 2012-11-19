@@ -1,5 +1,5 @@
 /**
- * frames.js for 23 Video v0.2
+ * frames.js for 23 Video v0.3
  * A jQuery plugin for creating dynamic thumbnails on 23 Video websites
  *
  * Kalle Kabell, kalle@23company.com
@@ -19,7 +19,11 @@
 	    showProgress: true,
 	    progressColor: "#49A34D",
 	    progressAlign: "top",
-	    progressHeight: "5%"
+	    progressHeight: "5%",
+	    showTime: false,
+	    timeBackground: "#49A34D",
+	    timeVerticalAlign: "bottom",
+	    timeHorizontalAlign: "right"
 	}, options);
 
 	var intervals = [];
@@ -143,6 +147,30 @@
 		    }
 		}
 
+		// Optionally init and place time
+		if (settings.showTime) {
+		    $that.parent().css({position: "relative"});
+		    $that.after('<div class="time">0:00</div>');
+		    var time = $that.parent().children(".time");
+		    time.css({
+			position: "absolute",
+			padding: "3px 6px",
+			backgroundColor: settings.timeBackground,
+			color: "#FFFFFF",
+			fontSize: "10px"
+		    });
+		    if (settings.timeVerticalAlign === "top") {
+			time.css({top: 5});
+		    } else {
+			time.css({bottom: 5});
+		    }
+		    if (settings.timeHorizontalAlign === "left") {
+			time.css({left: 5});
+		    } else {
+			time.css({right: 5});
+		    }
+		}
+
 		var index = -1;
 		var x = 0;
 		var framesLength = 0;
@@ -162,10 +190,19 @@
 			that.shown = index;
 			that.time = (that.length / settings.frameCount * (loadedFrames[that.shown] || index + 1)) >> 0;
 			$that.attr("src", getThumbnailPath(that.time));
+
 			if (settings.showProgress) {
 			    var progressWidth = ((that.shown + 1) / framesLength * 100) + "%";
 			    progressBar.css({width: progressWidth});
 			}
+
+			if (settings.showTime) {
+			    var minutes = parseInt(that.time / 60);
+			    var seconds = that.time % 60;
+			    if (seconds < 10) {seconds = "0" + seconds}
+			    time.html(minutes + ":" + seconds);
+			}
+
 		    }
 		});
 	    };
@@ -188,6 +225,9 @@
 		that.shownIdent = -1;
 		if (settings.showProgress) {
 		    $that.parent().children(".progress").remove();
+		}
+		if (settings.showTime) {
+		    $that.parent().children(".time").remove();
 		}
 	    };
 
